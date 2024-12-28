@@ -61,11 +61,16 @@ function doOperation(event) {
     document.querySelector("#result").innerText = "0";
     visibleNumber = "";
 
+    /*Se aplica una transicion de color de fondo a naranja y texto a blanco a todos los
+    botones con las clases .button y .orange; es decir a los botones naranjas*/
     const orangeButtons = document.querySelectorAll(".button.orange")
     orangeButtons.forEach(button => {
         button.style.backgroundColor = "var(--orange)";
         button.style.color = "var(--white)";
-      });
+    });
+    
+    /*Se aplica una transicion de color de fondo a blanco y texto a naranja del boton que
+    se presiona*/
     const selectedButtonId = "#" + event.target.id;
     const selectedButton = document.querySelector(selectedButtonId);
     selectedButton.style.backgroundColor = "var(--white)";

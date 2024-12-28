@@ -87,7 +87,7 @@ main {
 }
 
 .button.orange {
-    transition: background-color 3s ease;
+    transition: background-color 4s ease;
     transition: color 1s ease;
     background-color: var(--orange);
     color: var(--white);
