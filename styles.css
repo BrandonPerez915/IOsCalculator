@@ -1,0 +1,123 @@
+:root{
+    --orange: #ffae00;
+    --white: #ffffff;
+    --black: #000000;
+    --light-gray: #dadada;
+    --dark-gray:#5d5d5d;
+}
+
+html, body, main {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    overflow: hidden;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#calcBorder {
+    width: 250px;
+    height: 95%;
+    background-color: var(--black);
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.button {
+    width: 47px;
+    height: 47px;
+    border-radius: 100%;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+#screenResult {
+    width: 85%;
+    height: 33%;
+    margin-top: 10px;
+    display:flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+#buttonsBorder {
+    width: 85%;
+    height: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+#cero{
+    width: 100px;
+    border-radius: 30px;
+    justify-content: flex-start;
+    padding-left: 18px; 
+}
+
+.button.number {
+    font-size: 25px
+}
+
+.button.symbol {
+    font-size: 27px;
+}
+
+.button.orange {
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+.button.light-gray {
+    background-color: var(--light-gray);
+}
+
+.button.dark-gray {
+    background-color: var(--dark-gray);
+    color: var(--white)
+}
+
+#mul {
+    padding-bottom: 5px;
+}
+
+#min {
+    font-size: 35px;
+    padding-bottom: 7px;
+}
+
+#result {
+    width: 90%;
+    height: 100%;
+    color: var(--white);
+    font-size: 53px;
+    display:flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    position: relative;
+    right: 10px;
+    bottom: 4px
+}

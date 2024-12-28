@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <div id="calcBorder">
+            <div id="screenResult">
+                <span id="result">0</span>
+            </div>
+            <div id="buttonsBorder">
+                <button class="button light-gray" id="AC" onclick=resetDelete()>AC</button>
+                <button class="button light-gray" id="neg">+/-</button>
+                <button class="button light-gray" id="perc">%</button>
+                <button class="button symbol orange" value="/" id="div" onclick=doOperation(event)>÷</button>
+                <button class="button number dark-gray" value="7" id="seven" onclick=addNumbers(event)>7</button>
+                <button class="button number dark-gray" value="8" id="eight" onclick=addNumbers(event)>8</button>
+                <button class="button number dark-gray" value="9" id="nine" onclick=addNumbers(event)>9</button>
+                <button class="button symbol orange" value="*" id="mul" onclick=doOperation(event)>x</button>
+                <button class="button number dark-gray" value="4" id="four" onclick=addNumbers(event)>4</button>
+                <button class="button number dark-gray" value="5" id="five" onclick=addNumbers(event)>5</button>
+                <button class="button number dark-gray" value="6" id="six" onclick=addNumbers(event)>6</button>
+                <button class="button symbol orange" value="-" id="min" onclick=doOperation(event)>-</button>
+                <button class="button number dark-gray" value="1" id="one" onclick=addNumbers(event)>1</button>
+                <button class="button number dark-gray" value="2" id="two" onclick=addNumbers(event)>2</button>
+                <button class="button number dark-gray" value="3" id="three" onclick=addNumbers(event)>3</button>
+                <button class="button symbol orange" value="+" id="plu" onclick=doOperation(event)>+</button>
+                <button class="button number dark-gray" value="0" id="cero" onclick=addNumbers(event)>0</button>
+                <button class="button symbol dark-gray" value="." id="per" onclick=addDecimals()>.</button>
+                <button class="button symbol orange" id="equ" onclick=prueba()>=</button>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
