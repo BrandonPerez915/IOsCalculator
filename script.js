@@ -14,6 +14,10 @@ function resetDelete() {
     }
     else {
         document.querySelector("#result").innerText = "0"; 
+        globalCount = globalCount.slice(0, globalCount.length - visibleNumber.length);
+        showNumber = [];
+        visibleNumber = "";
+        document.querySelector("#AC").innerText = "AC";
     }
 
     resultText.style.fontSize = "53px";
@@ -30,6 +34,7 @@ function addNumbers(event) {
         showNumber = [] ;
         numbersFormat();
         adjustTextSize();
+        ACToC()
     }
 }
 
@@ -55,6 +60,16 @@ function doOperation(event) {
     //Texto reiniciado y inicializacion de un nuevo numero despues del operador
     document.querySelector("#result").innerText = "0";
     visibleNumber = "";
+
+    const orangeButtons = document.querySelectorAll(".button.orange")
+    orangeButtons.forEach(button => {
+        button.style.backgroundColor = "var(--orange)";
+        button.style.color = "var(--white)";
+      });
+    const selectedButtonId = "#" + event.target.id;
+    const selectedButton = document.querySelector(selectedButtonId);
+    selectedButton.style.backgroundColor = "var(--white)";
+    selectedButton.style.color = "var(--orange)";
 }
 
 function addDecimals() {
@@ -115,6 +130,10 @@ function adjustTextSize() {
     else if (visibleNumber.length === 9){
         resultText.style.fontSize = "35px";
     }
+}
+
+function ACToC() {
+    document.querySelector("#AC").innerText = "C"
 }
 
 function prueba() {
