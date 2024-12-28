@@ -1,22 +1,25 @@
 let visibleNumber = "";
 let showNumber = [];
 let globalCount = "";
+let equalPressed = false;
+let operationPressed = false;
 
 //Funcion para borrar operaciones total o parcialmente
 function resetDelete() {
     const resultText = document.querySelector("#result");
 
     if  (document.querySelector("#AC").innerText === "AC") {
-        document.querySelector("#result").innerText = "0";
+        screenPrint("0");
         showNumber = [];
-        visibleNumber = "";
+        setVisibleNumber("");
         globalCount = "";
+        resetOrangeButtons();
     }
     else {
-        document.querySelector("#result").innerText = "0"; 
+        screenPrint("0");
         globalCount = globalCount.slice(0, globalCount.length - visibleNumber.length);
         showNumber = [];
-        visibleNumber = "";
+        setVisibleNumber("");
         document.querySelector("#AC").innerText = "AC";
     }
 
@@ -29,6 +32,10 @@ function addNumbers(event) {
 
     //Prevencion de ceros antes de otro 0 y de un numero de mas de 9 digitos
     if ((visibleNumber !== "" || addNumber !== "0") && visibleNumber.length < 9) {
+        if (operationPressed) {
+            setVisibleNumber("");
+            operationPressed = false;
+        }
         visibleNumber += addNumber;
         globalCount += addNumber;
         showNumber = [] ;
@@ -45,7 +52,7 @@ function doOperation(event) {
     /*En caso de presionar una operacion sin haber ingresado un numero previo este toma 
     un valor de 0*/
     if (globalCount === "") {
-        visibleNumber = "0";
+        setVisibleNumber ("0");
     }
 
     /*En caso de que el ultimo caracter no sea un numero (operador), este se tiene que 
@@ -57,24 +64,10 @@ function doOperation(event) {
         globalCount = globalCount.slice(0, -1) + addOperation;
     }
 
-    //Texto reiniciado y inicializacion de un nuevo numero despues del operador
-    document.querySelector("#result").innerText = "0";
-    visibleNumber = "";
-
-    /*Se aplica una transicion de color de fondo a naranja y texto a blanco a todos los
-    botones con las clases .button y .orange; es decir a los botones naranjas*/
-    const orangeButtons = document.querySelectorAll(".button.orange")
-    orangeButtons.forEach(button => {
-        button.style.backgroundColor = "var(--orange)";
-        button.style.color = "var(--white)";
-    });
-    
-    /*Se aplica una transicion de color de fondo a blanco y texto a naranja del boton que
-    se presiona*/
-    const selectedButtonId = "#" + event.target.id;
-    const selectedButton = document.querySelector(selectedButtonId);
-    selectedButton.style.backgroundColor = "var(--white)";
-    selectedButton.style.color = "var(--orange)";
+    screenPrint(visibleNumber);
+    resetOrangeButtons();
+    transitionOrangeButtons();
+    operationPressed = true;
 }
 
 function addDecimals() {
@@ -118,6 +111,10 @@ function numbersFormat () {
     }
 }
 
+function setVisibleNumber (value) {
+    visibleNumber = value;
+}
+
 function adjustTextSize() {
     const resultText = document.querySelector("#result");
     if (visibleNumber.length < 6) {
@@ -138,9 +135,42 @@ function adjustTextSize() {
 }
 
 function ACToC() {
-    document.querySelector("#AC").innerText = "C"
+    document.querySelector("#AC").innerText = "C";
 }
 
-function prueba() {
-    document.querySelector("#result").innerText = globalCount;
+function calculateResult() {
+    resetOrangeButtons();
+    if (isNaN(globalCount[globalCount.length - 1] && !equalPressed)) {
+        globalCount += globalCount.slice(0, globalCount.length - 1);
+        equalPressed = true;
+    }
+    else {
+        equalPressed = true;
+    }
+
+    let result = eval(globalCount);
+    document.querySelector("#result").innerText = result;
+}
+
+function resetOrangeButtons() {
+    /*Se aplica una transicion de color de fondo a naranja y texto a blanco a todos los
+    botones con las clases .button y .orange; es decir a los botones naranjas*/
+    const orangeButtons = document.querySelectorAll(".button.orange")
+        orangeButtons.forEach(button => {
+        button.style.backgroundColor = "var(--orange)";
+        button.style.color = "var(--white)";
+    });
+}
+
+function transitionOrangeButtons() {
+    /*Se aplica una transicion de color de fondo a blanco y texto a naranja del boton que
+    se presiona*/
+    const selectedButtonId = "#" + event.target.id;
+    const selectedButton = document.querySelector(selectedButtonId);
+    selectedButton.style.backgroundColor = "var(--white)";
+    selectedButton.style.color = "var(--orange)";
+} 
+
+function screenPrint(str) {
+    document.querySelector("#result").innerText = str;
 }
