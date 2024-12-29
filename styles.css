@@ -2,8 +2,10 @@
     --orange: #ffae00;
     --white: #ffffff;
     --black: #000000;
-    --light-gray: #dadada;
+    --light-gray: #b7b7b7;
+    --light-gray-click: #d0d0d0;
     --dark-gray:#5d5d5d;
+    --dark-gray-click:#878787;
 }
 
 html, body, main {
@@ -39,7 +41,6 @@ main {
     width: 47px;
     height: 47px;
     border-radius: 100%;
-    background-color: var(--white);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,19 +88,20 @@ main {
 }
 
 .button.orange {
-    transition: background-color 4s ease;
-    transition: color 1s ease;
     background-color: var(--orange);
     color: var(--white);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .button.light-gray {
     background-color: var(--light-gray);
+    transition: background-color 0.001s ease;
 }
 
 .button.dark-gray {
     background-color: var(--dark-gray);
-    color: var(--white)
+    color: var(--white);
+    transition: background-color 0.001s ease;
 }
 
 #mul {

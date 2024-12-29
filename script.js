@@ -37,6 +37,8 @@ function resetDelete() {
         formattedVisibleNumber = "";
     }
 
+    transitionGrayButtons("var(--light-gray)", "var(--light-gray-click)")
+
     //Restablecer el tamaño inicial despues de presionar la tecla AC/C
     resultText.style.fontSize = "53px";
 }
@@ -58,38 +60,12 @@ function addNumbers(event) {
         globalCount += addNumber;
         formattedNumber = [] ;
         numbersFormat();
-        adjustTextSize();
+        adjustTextSize(visibleNumber);
         ACorC("C")
         equalPressed = false;
         operationPressed = false;
     }
-}
-
-//Funcion para agregar una operación
-function doOperation(event) {
-    const addOperation = event.target.value;
-
-    /*En caso de presionar una operacion sin haber ingresado un numero previo este toma 
-    un valor de 0*/
-    if (globalCount === "") {
-        setVisibleNumber ("0");
-    }
-
-    /*En caso de que el ultimo caracter no sea un numero (operador), este se tiene que 
-    remplazar por el operando del boton presionado*/
-    if (!isNaN(visibleNumber[visibleNumber.length - 1])) {
-        globalCount = visibleNumber + addOperation;
-    }
-
-    else {
-        globalCount = globalCount.slice(0, -1) + addOperation;
-    }
-
-    screenPrint(formattedVisibleNumber);
-    resetOrangeButtons();
-    transitionOrangeButtons();
-    operationPressed = true;
-    equalPressed = false;
+    transitionGrayButtons("var(--dark-gray)", "var(--dark-gray-click)")
 }
 
 //Funcion para agregar puntos decimales
@@ -108,6 +84,68 @@ function addDecimals() {
         }
     }
     screenPrint(visibleNumber);
+    adjustTextSize(visibleNumber)
+    equalPressed = false;
+    operationPressed = false;
+}
+
+//Funcion para agregar una operación
+function doOperation(event) {
+    const addOperation = event.target.value;
+    formattedVisibleNumber = visibleNumber;
+
+    /*En caso de presionar una operacion sin haber ingresado un numero previo este toma 
+    un valor de 0*/
+    if (globalCount === "") {
+        setVisibleNumber ("0");
+    }
+
+    /*En caso de que el ultimo caracter no sea un numero (operador), este se tiene que 
+    remplazar por el operando del boton presionado*/
+    if (!isNaN(visibleNumber[visibleNumber.length - 1])) {
+        globalCount = visibleNumber + addOperation;
+    }
+
+    else {
+        globalCount = globalCount.slice(0, -1) + addOperation;
+    }
+
+    screenPrint(formattedVisibleNumber);
+    adjustTextSize(formattedVisibleNumber)
+    resetOrangeButtons();
+    transitionOrangeButtons();
+    operationPressed = true;
+    equalPressed = false;
+}
+
+function doPercentage() {
+    let currentNumber = parseFloat(globalCount);
+    
+    if (!isNaN(currentNumber)) {
+        currentNumber /= 100;
+
+        // Actualizar el valor global y el número visible
+        globalCount = currentNumber.toString();
+        visibleNumber = currentNumber.toString();
+        screenPrint(visibleNumber);
+        adjustTextSize(visibleNumber)
+    }
+    equalPressed = false;
+    operationPressed = false;
+}
+
+function doInvertSign() {
+    let currentNumber = parseFloat(globalCount);
+    
+    if (!isNaN(currentNumber)) {
+        currentNumber *= -1;
+
+        // Actualizar el valor global y el número visible
+        globalCount = currentNumber.toString();
+        visibleNumber = currentNumber.toString();
+        screenPrint(visibleNumber);
+        adjustTextSize(visibleNumber)
+    }
     equalPressed = false;
     operationPressed = false;
 }
@@ -123,13 +161,17 @@ function calculateResult() {
         globalCount += globalCount.slice(0, globalCount.length - 1);
         equalPressed = true;
     }
-    
+
     else {
         equalPressed = true;
     }
 
-    let result = eval(globalCount);
+    let result = eval(globalCount).toFixed(8).toString();
+    let [integerPart, decimalPart] = result.split(".")
+    result = integerPart + result.slice(integerPart.length, 9 - integerPart.length);
+    result = Number(result)
     screenPrint(result);
+    adjustTextSize(result)
     visibleNumber = `${result}`
     operationPressed = false;
 }
@@ -156,9 +198,11 @@ function numbersFormat () {
         //Texto visible formateado del numero ingresado
         formattedVisibleNumber = formattedNumber.reverse().join("")
         screenPrint(formattedVisibleNumber);
+        adjustTextSize(formattedVisibleNumber);
     }
     else {
         screenPrint(visibleNumber);
+        adjustTextSize(visibleNumber);
     }
 }
 
@@ -195,25 +239,20 @@ function resetOrangeButtons() {
     });
 } 
 
-function adjustTextSize() {
+function transitionGrayButtons(mainColor, transitionColor) {
+    const selectedButtonId = "#" + event.target.id;
+    const selectedButton = document.querySelector(selectedButtonId);
+    selectedButton.style.backgroundColor = transitionColor;
+    //tiempo de espera para darle tiempo al navegador de hacer la transicion
+    setTimeout(() => {
+        selectedButton.style.backgroundColor = mainColor;
+    }, 200);
+}
+
+function adjustTextSize(value) {
     const resultText = document.querySelector("#result");
-    if (visibleNumber.length < 6) {
-        resultText.style.fontSize = "53px";
-    }
-
-    else if (visibleNumber.length === 6) {
-        resultText.style.fontSize = "50px";
-    }
-
-    else if (visibleNumber.length === 7) {
-        resultText.style.fontSize = "43px";
-    }
-
-    else if (visibleNumber.length === 8) {
-        resultText.style.fontSize = "38px";
-    }
-
-    else if (visibleNumber.length === 9){
-        resultText.style.fontSize = "35px";
+    let initialSize = 53;
+    if (value.length > 6) {
+        resultText.style.fontSize = `${initialSize - 5.5 * (value.length - 6)}px`;
     }
 }

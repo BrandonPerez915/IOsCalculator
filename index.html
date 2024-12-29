@@ -14,8 +14,8 @@
             </div>
             <div id="buttonsBorder">
                 <button class="button light-gray" id="AC" onclick=resetDelete()>AC</button>
-                <button class="button light-gray" id="neg">+/-</button>
-                <button class="button light-gray" id="perc">%</button>
+                <button class="button light-gray" id="neg" onclick=doInvertSign()>+/-</button>
+                <button class="button light-gray" id="perc" onclick=doPercentage()>%</button>
                 <button class="button symbol orange" value="/" id="div" onclick=doOperation(event)>÷</button>
                 <button class="button number dark-gray" value="7" id="seven" onclick=addNumbers(event)>7</button>
                 <button class="button number dark-gray" value="8" id="eight" onclick=addNumbers(event)>8</button>
