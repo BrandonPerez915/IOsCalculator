@@ -1,5 +1,6 @@
 let visibleNumber = "";
-let showNumber = [];
+let formattedVisibleNumber = "";
+let formattedNumber = [];
 let globalCount = "";
 let equalPressed = false;
 let operationPressed = false;
@@ -8,21 +9,35 @@ let operationPressed = false;
 function resetDelete() {
     const resultText = document.querySelector("#result");
 
+    //Si el texto mostrado es "AC" se restablece todo; es decir, un reinicio
     if  (document.querySelector("#AC").innerText === "AC") {
         screenPrint("0");
-        showNumber = [];
+        formattedNumber = [];
         setVisibleNumber("");
         globalCount = "";
         resetOrangeButtons();
+        formattedVisibleNumber = "";
     }
+    
+    /*Si el texto mostrado es "C" se elimina el ultimo numero ingresado despues del operador
+    sin alterar el contador global siempre y cuando la tecla presionada anteriormente sea 
+    diferente de la tecla "=", caso contrario el boton "C" actua como el boton "AC"*/
     else {
+        if (equalPressed) {
+            globalCount = "";
+        }
+
+        else {
+            globalCount = globalCount.slice(0, globalCount.length - visibleNumber.length);
+        }
         screenPrint("0");
-        globalCount = globalCount.slice(0, globalCount.length - visibleNumber.length);
-        showNumber = [];
+        formattedNumber = [];
         setVisibleNumber("");
-        document.querySelector("#AC").innerText = "AC";
+        ACorC("AC")
+        formattedVisibleNumber = "";
     }
 
+    //Restablecer el tamaño inicial despues de presionar la tecla AC/C
     resultText.style.fontSize = "53px";
 }
 
@@ -32,16 +47,21 @@ function addNumbers(event) {
 
     //Prevencion de ceros antes de otro 0 y de un numero de mas de 9 digitos
     if ((visibleNumber !== "" || addNumber !== "0") && visibleNumber.length < 9) {
+
+        //Reinicio del numero visible en caso de que el boton previo sea un operador
         if (operationPressed) {
             setVisibleNumber("");
             operationPressed = false;
         }
+
         visibleNumber += addNumber;
         globalCount += addNumber;
-        showNumber = [] ;
+        formattedNumber = [] ;
         numbersFormat();
         adjustTextSize();
-        ACToC()
+        ACorC("C")
+        equalPressed = false;
+        operationPressed = false;
     }
 }
 
@@ -60,28 +80,58 @@ function doOperation(event) {
     if (!isNaN(visibleNumber[visibleNumber.length - 1])) {
         globalCount = visibleNumber + addOperation;
     }
+
     else {
         globalCount = globalCount.slice(0, -1) + addOperation;
     }
 
-    screenPrint(visibleNumber);
+    screenPrint(formattedVisibleNumber);
     resetOrangeButtons();
     transitionOrangeButtons();
     operationPressed = true;
+    equalPressed = false;
 }
 
+//Funcion para agregar puntos decimales
 function addDecimals() {
     if (visibleNumber.length < 9 && !visibleNumber.includes(".")) {
+        //Si se presiona el boton de punto decimal sin ingresar un numero se agrega "0."
         if (visibleNumber === "") {
             visibleNumber += "0.";
             globalCount += visibleNumber;
         }
+
+        //Si el numero no tiene un punto decimal, se le agrega al final
         else if (!visibleNumber.includes(".")){
             visibleNumber += ".";
             globalCount += ".";
         }
     }
-    document.querySelector("#result").innerText = visibleNumber;
+    screenPrint(visibleNumber);
+    equalPressed = false;
+    operationPressed = false;
+}
+
+//Funcion para calcular el resultado
+function calculateResult() {
+    resetOrangeButtons();
+
+    /*Si se presiona la tecla "=" sin haber agregado un numero despues de una operacion 
+    se considera ese numero como el numero antes del operador, ejemplo: 5/, si en este
+    punto se presiona la tecla "=" la operacion a realizar sera: 5/5 */
+    if (isNaN(globalCount[globalCount.length - 1] && !equalPressed)) {
+        globalCount += globalCount.slice(0, globalCount.length - 1);
+        equalPressed = true;
+    }
+    
+    else {
+        equalPressed = true;
+    }
+
+    let result = eval(globalCount);
+    screenPrint(result);
+    visibleNumber = `${result}`
+    operationPressed = false;
 }
 
 function numbersFormat () {
@@ -95,19 +145,20 @@ function numbersFormat () {
                 break;
             }
             else {
-                showNumber.push("," + visibleNumber.slice(i - 2, i + 1));
+                formattedNumber.push("," + visibleNumber.slice(i - 2, i + 1));
                 iterations ++;
             }
         }
 
         //Concatenación del grupo de numeros a la izquierda, sea de 3, 2 o 1 digito
-        showNumber.push(visibleNumber.slice(0, visibleNumber.length - 3 * iterations));
+        formattedNumber.push(visibleNumber.slice(0, visibleNumber.length - 3 * iterations));
 
         //Texto visible formateado del numero ingresado
-        document.querySelector("#result").innerText = showNumber.reverse().join("");
+        formattedVisibleNumber = formattedNumber.reverse().join("")
+        screenPrint(formattedVisibleNumber);
     }
     else {
-        document.querySelector("#result").innerText = visibleNumber;
+        screenPrint(visibleNumber);
     }
 }
 
@@ -115,41 +166,23 @@ function setVisibleNumber (value) {
     visibleNumber = value;
 }
 
-function adjustTextSize() {
-    const resultText = document.querySelector("#result");
-    if (visibleNumber.length < 6) {
-        resultText.style.fontSize = "53px";
-    }
-    else if (visibleNumber.length === 6) {
-        resultText.style.fontSize = "50px";
-    }
-    else if (visibleNumber.length === 7) {
-        resultText.style.fontSize = "43px";
-    }
-    else if (visibleNumber.length === 8) {
-        resultText.style.fontSize = "38px";
-    }
-    else if (visibleNumber.length === 9){
-        resultText.style.fontSize = "35px";
-    }
+function ACorC(str) {
+    document.querySelector("#AC").innerText = str;
 }
 
-function ACToC() {
-    document.querySelector("#AC").innerText = "C";
+function screenPrint(str) {
+    document.querySelector("#result").innerText = str;
 }
 
-function calculateResult() {
-    resetOrangeButtons();
-    if (isNaN(globalCount[globalCount.length - 1] && !equalPressed)) {
-        globalCount += globalCount.slice(0, globalCount.length - 1);
-        equalPressed = true;
-    }
-    else {
-        equalPressed = true;
-    }
+//Apartado de funciones destinadas a reglas CSS (diseño)
 
-    let result = eval(globalCount);
-    document.querySelector("#result").innerText = result;
+function transitionOrangeButtons() {
+    /*Se aplica una transicion de color de fondo a blanco y texto a naranja del boton que
+    se presiona*/
+    const selectedButtonId = "#" + event.target.id;
+    const selectedButton = document.querySelector(selectedButtonId);
+    selectedButton.style.backgroundColor = "var(--white)";
+    selectedButton.style.color = "var(--orange)";
 }
 
 function resetOrangeButtons() {
@@ -160,17 +193,27 @@ function resetOrangeButtons() {
         button.style.backgroundColor = "var(--orange)";
         button.style.color = "var(--white)";
     });
-}
-
-function transitionOrangeButtons() {
-    /*Se aplica una transicion de color de fondo a blanco y texto a naranja del boton que
-    se presiona*/
-    const selectedButtonId = "#" + event.target.id;
-    const selectedButton = document.querySelector(selectedButtonId);
-    selectedButton.style.backgroundColor = "var(--white)";
-    selectedButton.style.color = "var(--orange)";
 } 
 
-function screenPrint(str) {
-    document.querySelector("#result").innerText = str;
+function adjustTextSize() {
+    const resultText = document.querySelector("#result");
+    if (visibleNumber.length < 6) {
+        resultText.style.fontSize = "53px";
+    }
+
+    else if (visibleNumber.length === 6) {
+        resultText.style.fontSize = "50px";
+    }
+
+    else if (visibleNumber.length === 7) {
+        resultText.style.fontSize = "43px";
+    }
+
+    else if (visibleNumber.length === 8) {
+        resultText.style.fontSize = "38px";
+    }
+
+    else if (visibleNumber.length === 9){
+        resultText.style.fontSize = "35px";
+    }
 }

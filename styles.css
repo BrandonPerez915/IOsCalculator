@@ -27,7 +27,7 @@ main {
 
 #calcBorder {
     width: 250px;
-    height: 95%;
+    height: 445px;
     background-color: var(--black);
     border-radius: 20px;
     display: flex;
